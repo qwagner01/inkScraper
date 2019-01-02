@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request as req
 import requests as r
 from bs4 import BeautifulSoup
-import re
 import json
 app = Flask(__name__)
 
