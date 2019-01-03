@@ -6,7 +6,7 @@ import json
 app = Flask(__name__)
 
 
-@app.route("/content", methods=["GET"])
+@app.route("/", methods=["GET"])
 def start():
     links = []
     content = []
@@ -23,12 +23,19 @@ def start():
     for l in range(len(links)):
         html = r.get(links[l]).content
         soup = BeautifulSoup(html, features="html.parser")
-        snip = soup.find('div', attrs={'class', 'pf-content'}).text
-        content.append(snip)
-
-
+        try:
+            snip = soup.find('div', attrs={'class', 'pf-content'}).get_text(strip=True).encode('ascii', 'ignore').decode("utf-8")
+            content.append(snip)
+        except:
+            pass
     if req.method == 'GET':
-        return json.dumps(content)
+        res = app.response_class(
+        response=json.dumps(content),
+        status=200,
+        mimetype='application/json'
+    )
+    return res
+
 
 if __name__ == '__main__':
     app.run()
